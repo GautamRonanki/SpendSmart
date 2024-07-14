@@ -65,6 +65,36 @@ public class HomeController : Controller
         return RedirectToAction("Expenses");
     }
 
+         public IActionResult FutureExpenses()
+    {
+        var allExpenses = _context.Expenses.ToList();
+
+        var totalExpenses = allExpenses.Sum(x => x.Value);
+
+        ViewBag.Expenses = totalExpenses;
+        
+        return View(allExpenses);
+    }
+
+     public IActionResult FutureCreateEditExpense(int? id)
+    {
+        if(id != null)
+        {
+            var expenseInDb = _context.Expenses.SingleOrDefault(expense => expense.Id == id);
+            return View(expenseInDb);
+        }
+        
+        return View();
+    }
+
+     public IActionResult FutureDeleteExpense(int? id)
+    {
+        var expenseInDb = _context.Expenses.SingleOrDefault(expense => expense.Id == id);
+        _context.Expenses.Remove(expenseInDb);
+        _context.SaveChanges();
+        return RedirectToAction("Expenses");
+    }
+
     public IActionResult Privacy()
     {
         return View();
